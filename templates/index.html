@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>火星探査機画像ビューア</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 2em auto;
+            padding: 0 1em;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .photo-grid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 火星探査機の写真を見る</h1>
+    <form method="post">
+        日付（YYYY-MM-DD）:
+        <input type="date" name="date" value="{{ date }}" required>
+        <input type="submit" value="画像を取得">
+    </form>
+
+    {% if photos %}
+        <h2>📅 {{ date }} のNavigation Camera画像（{{ photos|length }} 枚）</h2>
+        <div class="photo-grid">
+            {% for photo in photos %}
+                <img src="{{ photo.img_src }}" alt="Mars photo">
+            {% endfor %}
+        </div>
+    {% elif date %}
+        <p>😢 画像が見つかりませんでした。</p>
+    {% endif %}
+</body>
+</html>
