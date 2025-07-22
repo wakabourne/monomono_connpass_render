@@ -8,9 +8,9 @@ NASA_API_KEY = "DEMO_KEY"  # ← 自分のNASA APIキーに置き換えてくだ
 @app.route("/", methods=["GET", "POST"])
 def index():
     photos = []
-    date = ""
+    date = "2020-07-01"
     if request.method == "POST":
-        date = request.form["date"]
+        date = request.form["date"] or date
         api_url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
         params = {
             "earth_date": date,
