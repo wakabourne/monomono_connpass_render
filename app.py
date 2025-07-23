@@ -1,27 +1,22 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
-
-NASA_API_KEY = "DEMO_KEY"  # ← 自分のNASA APIキーに置き換えてください
+API_KEY = "DEMO_KEY"  # NASAのAPIキー（DEMO_KEYでもOK）
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    photos = []
-    date = "2020-07-01"
-    if request.method == "POST":
-        date = request.form["date"] or date
-        api_url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
-        params = {
-            "earth_date": date,
-            "api_key": NASA_API_KEY
-        }
-        res = requests.get(api_url, params=params)
-        if res.status_code == 200:
-            all_photos = res.json().get("photos", [])
-            # Navigation Camera の写真を最大4枚だけ取得
-            photos = [p for p in all_photos if p["camera"]["full_name"] == "Navigation Camera"][:4]
-    return render_template("index.html", photos=photos, date=date)
+    default_date = "2015-06-03"
+    # フォームからの日付、なければデフォルト
+    date = request.form.get("date") if request.method == "POST" else default_date
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
+    params = {"earth_date": date, "api_key": API_KEY}
+    response = requests.get(url, params=params)
+
+    photos = []
+    if response.ok:
+        data = response.json()
+        photos = [photo["img_src"] for photo in data["photos"][:4]]  # 最大4枚表示
+
+    return render_template("index.html", photos=photos, date=date)
