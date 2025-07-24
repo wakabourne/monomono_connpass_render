@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
-API_KEY = "DEMO_KEY"  # NASAのAPIキー（DEMO_KEYでもOK）
+API_KEY = "DEMO_KEY"  # これはデモキーです　本番で使用する際はNASAの公式ページからAPIキーを取得してください
 
 @app.route("/", methods=["GET", "POST"])
 def index():
